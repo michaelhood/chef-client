@@ -51,9 +51,12 @@ module Opscode
             else
               mode 00755
             end
-            if server
+            if server && node.recipe?("chef-server") && Chef::VERSION < '11.0.0'
               owner "chef"
               group "chef"
+            elsif server && node.recipe?("chef-server") && Chef::VERSION >= '11.0.0'
+              owner "chef-server"
+              group "chef-server"
             else
               owner value_for_platform(
                 ["windows"] => { "default" => "Administrator" },
